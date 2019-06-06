@@ -320,8 +320,13 @@ class JSONRPCWallet(object):
             method=method,
             params=json.dumps(params, indent=2, sort_keys=True)))
         auth = requests.auth.HTTPDigestAuth(self.user, self.password)
-        rsp = requests.post(
-            self.url, headers=hdr, data=json.dumps(data), auth=auth, timeout=self.timeout)
+        while True:
+            try:
+                rsp = requests.post(self.url, headers=hdr, data=json.dumps(data), auth=auth, timeout=self.timeout)
+            except:
+                continue
+            else:
+                break
         if rsp.status_code == 401:
             raise Unauthorized("401 Unauthorized. Invalid RPC user name or password.")
         elif rsp.status_code != 200:
