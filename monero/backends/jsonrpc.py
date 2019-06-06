@@ -323,7 +323,7 @@ class JSONRPCWallet(object):
         while True:
             try:
                 rsp = requests.post(self.url, headers=hdr, data=json.dumps(data), auth=auth, timeout=self.timeout)
-            except:
+            except requests.exceptions.Timeout:
                 continue
             else:
                 break
